@@ -1,23 +1,386 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Simple Site</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>site</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --fg: #000000;
+      --border: #000000;
+      --muted: #555555;
+      --font: "Courier New", Courier, monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg: #000000;
+      --fg: #ffffff;
+      --border: #ffffff;
+      --muted: #aaaaaa;
+    }
+
+    html, body {
+      height: 100%;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 14px;
+      transition: background-color 0.1s, color 0.1s;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────────── */
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      background-color: var(--bg);
+      z-index: 100;
+    }
+
+    .header-left,
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* menu button */
+    #menu-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    #menu-btn:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    /* theme toggle */
+    #theme-btn {
+      background: none;
+      border: none;
+      color: var(--fg);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.25rem 0.4rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    #theme-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* ── NAV DRAWER ──────────────────────────────────────────── */
+
+    nav {
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.15s ease, padding 0.15s ease;
+    }
+
+    nav.open {
+      max-height: 400px;
+      padding: 0.75rem 1rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    nav ul li a {
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+
+    nav ul li a::before {
+      content: "> ";
+      color: var(--muted);
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── MAIN ────────────────────────────────────────────────── */
+
+    main {
+      padding: 2rem 1rem;
+      max-width: 860px;
+    }
+
+    /* ── COOKIE BANNER ───────────────────────────────────────── */
+
+    #cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid var(--border);
+      background-color: var(--bg);
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transform: translateY(100%);
+      transition: transform 0.2s ease;
+    }
+
+    #cookie-banner.visible {
+      transform: translateY(0);
+    }
+
+    .cookie-view {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .cookie-view p {
+      font-size: 13px;
+      flex: 1;
+      white-space: nowrap;
+    }
+
+    .cookie-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .cookie-actions button {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 12px;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .cookie-actions button:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    .cookie-options {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    @keyframes cookie-reveal {
+      from { opacity: 0; transform: translateX(-6px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .cookie-option {
+      cursor: pointer;
+      font-size: 13px;
+      user-select: none;
+      white-space: nowrap;
+      opacity: 0;
+    }
+
+    #cookie-configure-view:not([hidden]) .cookie-option {
+      animation: cookie-reveal 0.15s ease forwards;
+    }
+
+    #cookie-configure-view:not([hidden]) .cookie-option:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    #cookie-configure-view:not([hidden]) .cookie-option:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .cookie-option input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .cookie-option::before {
+      content: "[ ] ";
+      color: var(--muted);
+    }
+
+    .cookie-option:has(input:checked)::before {
+      content: "[x] ";
+      color: var(--fg);
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to the Simple Site</h1>
-        <nav>
-            <a href="index.html">Home</a> |
-        </nav>
-    </header>
-    <main>
-        <p>This is the home page. Add your content here.</p>
-    </main>
-    <footer>
-        <p>&copy; 2026 Simple Site</p>
-    </footer>
+
+  <header>
+    <div class="header-left">
+      <button id="menu-btn" aria-expanded="false" aria-controls="nav-drawer">[ menu ]</button>
+    </div>
+    <div class="header-right">
+      <button id="theme-btn" aria-label="Toggle light/dark mode">☾</button>
+    </div>
+  </header>
+
+  <nav id="nav-drawer" role="navigation" aria-label="Main menu">
+    <ul>
+      <li><a href="#">home</a></li>
+      <li><a href="projects.html">projects</a></li>
+      <li><a href="contact.html">contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <p>[ content goes here ]</p>
+  </main>
+
+  <div id="cookie-banner" role="dialog" aria-label="Cookie preferences">
+    <div class="cookie-view" id="cookie-default-view">
+      <p>This site uses cookies.</p>
+      <div class="cookie-actions">
+        <button id="cookie-reject">Reject all</button>
+        <button id="cookie-configure-btn">Configure</button>
+        <button id="cookie-accept-all">Accept all</button>
+      </div>
+    </div>
+    <div class="cookie-view" id="cookie-configure-view" hidden>
+      <div class="cookie-options">
+        <label class="cookie-option"><input type="checkbox" value="chocolate-chip" checked> Chocolate Chip</label>
+        <label class="cookie-option"><input type="checkbox" value="peanut-butter" checked> Peanut Butter</label>
+        <label class="cookie-option"><input type="checkbox" value="millionaire-shortbread" checked> Millionaire's Shortbread</label>
+      </div>
+      <div class="cookie-actions">
+        <button id="cookie-back">← Back</button>
+        <button id="cookie-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const html = document.documentElement;
+    const themeBtn = document.getElementById('theme-btn');
+    const menuBtn = document.getElementById('menu-btn');
+    const nav = document.getElementById('nav-drawer');
+
+    // theme
+    const stored = localStorage.getItem('theme') || 'light';
+    setTheme(stored);
+
+    themeBtn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function setTheme(t) {
+      html.dataset.theme = t;
+      themeBtn.textContent = t === 'dark' ? '☼' : '☾';
+      themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+
+    // cookie banner
+    const COOKIE_TYPES = {
+      'chocolate-chip': {
+        name: 'Chocolate Chip',
+        recipe: 'Cream 1 cup butter with ¾ cup each sugar and brown sugar. Beat in 2 eggs and 2 tsp vanilla. Stir in 2¼ cups flour, 1 tsp baking soda, 1 tsp salt. Fold in 2 cups chocolate chips. Bake at 190°C for 9–11 min.'
+      },
+      'peanut-butter': {
+        name: 'Peanut Butter',
+        recipe: 'Mix 1 cup peanut butter, 1 cup sugar, 1 egg, 1 tsp vanilla, and ½ tsp baking soda. Roll into balls, press flat with a fork. Bake at 180°C for 10–12 min.'
+      },
+      'millionaire-shortbread': {
+        name: "Millionaire's Shortbread",
+        recipe: 'Shortbread: rub 125g butter into 175g flour and 50g sugar, press into tin, bake at 180°C for 15 min. Caramel: simmer 100g butter, 100g sugar, and 1 tin condensed milk until golden, pour over base. Top with 200g melted chocolate. Chill 2 hrs.'
+      }
+    };
+
+    const banner = document.getElementById('cookie-banner');
+    const defaultView = document.getElementById('cookie-default-view');
+    const configureView = document.getElementById('cookie-configure-view');
+
+    function dismissBanner() {
+      banner.classList.remove('visible');
+    }
+
+    function saveCookies(types) {
+      localStorage.setItem('cookie-consent', 'set');
+      types.forEach(type => {
+        if (COOKIE_TYPES[type]) {
+          localStorage.setItem(`cookie-${type}`, COOKIE_TYPES[type].recipe);
+        }
+      });
+      dismissBanner();
+    }
+
+    const hasAnyCookie = Object.keys(COOKIE_TYPES).some(type => localStorage.getItem(`cookie-${type}`));
+    if (!localStorage.getItem('cookie-consent') && !hasAnyCookie) {
+      requestAnimationFrame(() => banner.classList.add('visible'));
+    }
+
+    document.getElementById('cookie-reject').addEventListener('click', () => {
+      localStorage.setItem('cookie-consent', 'rejected');
+      dismissBanner();
+    });
+
+    document.getElementById('cookie-accept-all').addEventListener('click', () => {
+      saveCookies(Object.keys(COOKIE_TYPES));
+    });
+
+    document.getElementById('cookie-configure-btn').addEventListener('click', () => {
+      defaultView.hidden = true;
+      configureView.hidden = false;
+    });
+
+    document.getElementById('cookie-back').addEventListener('click', () => {
+      configureView.hidden = true;
+      defaultView.hidden = false;
+    });
+
+    document.getElementById('cookie-save').addEventListener('click', () => {
+      const checked = [...configureView.querySelectorAll('input[type="checkbox"]:checked')]
+        .map(el => el.value);
+      saveCookies(checked);
+    });
+
+    // menu
+    menuBtn.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', isOpen);
+      menuBtn.textContent = isOpen ? '[ close ]' : '[ menu ]';
+    });
+  </script>
+
 </body>
 </html>

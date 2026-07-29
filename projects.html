@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>work</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --fg: #000000;
+      --border: #000000;
+      --muted: #555555;
+      --font: "Courier New", Courier, monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg: #000000;
+      --fg: #ffffff;
+      --border: #ffffff;
+      --muted: #aaaaaa;
+    }
+
+    html, body {
+      height: 100%;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 14px;
+      transition: background-color 0.1s, color 0.1s;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────────── */
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      background-color: var(--bg);
+      z-index: 100;
+    }
+
+    .header-left,
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    #menu-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    #menu-btn:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    #theme-btn {
+      background: none;
+      border: none;
+      color: var(--fg);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.25rem 0.4rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    #theme-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* ── NAV DRAWER ──────────────────────────────────────────── */
+
+    nav {
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.15s ease, padding 0.15s ease;
+    }
+
+    nav.open {
+      max-height: 400px;
+      padding: 0.75rem 1rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    nav ul li a {
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+
+    nav ul li a::before {
+      content: "> ";
+      color: var(--muted);
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── MAIN ────────────────────────────────────────────────── */
+
+    main {
+      padding: 2rem 1rem;
+      max-width: 860px;
+    }
+
+    h1 {
+      font-size: 14px;
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .project-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .project-list li {
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 0;
+    }
+
+    .project-list li:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .project-title {
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+    }
+
+    .project-year {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .project-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      line-height: 1.6;
+    }
+
+    .project-link {
+      font-size: 12px;
+      color: var(--fg);
+      margin-top: 0.3rem;
+      display: inline-block;
+    }
+
+    .project-link::before {
+      content: "-> ";
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <button id="menu-btn" aria-expanded="false" aria-controls="nav-drawer">[ menu ]</button>
+    </div>
+    <div class="header-right">
+      <button id="theme-btn" aria-label="Toggle light/dark mode">☾</button>
+    </div>
+  </header>
+
+  <nav id="nav-drawer" role="navigation" aria-label="Main menu">
+    <ul>
+      <li><a href="index.html">home</a></li>
+      <li><a href="#">about</a></li>
+      <li><a href="work.html">work</a></li>
+      <li><a href="#">contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>work</h1>
+    <ul class="project-list">
+      <li>
+        <div class="project-header">
+          <span class="project-title">project name</span>
+          <span class="project-year">2024</span>
+        </div>
+        <p class="project-desc">Short description of the project and what it involved.</p>
+        <a class="project-link" href="#">view project</a>
+      </li>
+      <li>
+        <div class="project-header">
+          <span class="project-title">another project</span>
+          <span class="project-year">2023</span>
+        </div>
+        <p class="project-desc">Short description of the project and what it involved.</p>
+        <a class="project-link" href="#">view project</a>
+      </li>
+      <li>
+        <div class="project-header">
+          <span class="project-title">earlier work</span>
+          <span class="project-year">2022</span>
+        </div>
+        <p class="project-desc">Short description of the project and what it involved.</p>
+        <a class="project-link" href="#">view project</a>
+      </li>
+    </ul>
+  </main>
+
+  <script>
+    const html = document.documentElement;
+    const themeBtn = document.getElementById('theme-btn');
+    const menuBtn = document.getElementById('menu-btn');
+    const nav = document.getElementById('nav-drawer');
+
+    const stored = localStorage.getItem('theme') || 'light';
+    setTheme(stored);
+
+    themeBtn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'light' ? 'dark' : 'light';
+      setTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function setTheme(t) {
+      html.dataset.theme = t;
+      themeBtn.textContent = t === 'dark' ? '☼' : '☾';
+      themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', isOpen);
+      menuBtn.textContent = isOpen ? '[ close ]' : '[ menu ]';
+    });
+  </script>
+
+</body>
+</html>
