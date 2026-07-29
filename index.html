@@ -151,7 +151,7 @@
       flex-direction: column;
       gap: 0.5rem;
       transform: translateY(100%);
-      transition: transform 0.2s ease;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     #cookie-banner.visible {
@@ -193,52 +193,207 @@
       color: var(--bg);
     }
 
-    .cookie-options {
+    /* ── COOKIE DIALOG MODAL ─────────────────────────────────── */
+
+    dialog#cookie-dialog {
+      background-color: var(--bg);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      max-width: 480px;
+      width: calc(100% - 2rem);
+      margin: auto;
+      font-family: var(--font);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    dialog#cookie-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+    }
+
+    .dialog-header {
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .dialog-intro {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .dialog-options {
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      flex: 1;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
     }
 
-    @keyframes cookie-reveal {
-      from { opacity: 0; transform: translateX(-6px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .cookie-option {
+    .dialog-option {
       cursor: pointer;
       font-size: 13px;
       user-select: none;
-      white-space: nowrap;
-      opacity: 0;
+      display: flex;
+      align-items: center;
     }
 
-    #cookie-configure-view:not([hidden]) .cookie-option {
-      animation: cookie-reveal 0.15s ease forwards;
-    }
-
-    #cookie-configure-view:not([hidden]) .cookie-option:nth-child(2) {
-      animation-delay: 0.1s;
-    }
-
-    #cookie-configure-view:not([hidden]) .cookie-option:nth-child(3) {
-      animation-delay: 0.2s;
-    }
-
-    .cookie-option input[type="checkbox"] {
+    .dialog-option input[type="checkbox"] {
       position: absolute;
       opacity: 0;
       width: 0;
       height: 0;
     }
 
-    .cookie-option::before {
+    .dialog-option::before {
       content: "[ ] ";
       color: var(--muted);
     }
 
-    .cookie-option:has(input:checked)::before {
+    .dialog-option:has(input:checked)::before {
       content: "[x] ";
+      color: var(--fg);
+      font-weight: bold;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .dialog-actions button {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 12px;
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+    }
+
+    .dialog-actions button:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    /* ── PROFILE & BIO STYLES ───────────────────────────────── */
+
+    .hero {
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 1.6rem;
+      font-weight: bold;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.3rem;
+    }
+
+    .hero .role-title {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 1rem;
+    }
+
+    .meta-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      font-size: 12px;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .meta-links a {
+      color: var(--fg);
+      text-decoration: underline;
+    }
+
+    .meta-links a:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+      text-decoration: none;
+    }
+
+    section {
+      margin-bottom: 2rem;
+    }
+
+    .section-heading {
+      font-size: 12px;
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 0.4rem;
+    }
+
+    .bio-text {
+      line-height: 1.7;
+      font-size: 13px;
+      margin-bottom: 1rem;
+    }
+
+    .bio-text strong {
+      color: var(--fg);
+      font-weight: bold;
+    }
+
+    .exp-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .exp-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .exp-role {
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .exp-company {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .exp-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .skills-list {
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .skills-list strong {
       color: var(--fg);
     }
   </style>
@@ -256,37 +411,78 @@
 
   <nav id="nav-drawer" role="navigation" aria-label="Main menu">
     <ul>
-      <li><a href="#">home</a></li>
-      <li><a href="projects.html">projects</a></li>
-      <li><a href="contact.html">contact</a></li>
+      <li><a href="index.html">home</a></li>
+      <li><a href="mailto:micah@blut.dev">contact</a></li>
     </ul>
   </nav>
 
   <main>
-    <p>[ content goes here ]</p>
+    <section class="hero">
+      <h1>Micah Edelblut</h1>
+      <p class="role-title">Senior Product Manager &bull; Dublin, Ireland</p>
+      
+      <div class="meta-links">
+        <span>email: <a href="mailto:micah@blut.dev">micah@blut.dev</a></span>
+        <span>linkedin: <a href="https://linkedin.com/in/medelblut" target="_blank" rel="noopener">linkedin.com/in/medelblut</a></span>
+      </div>
+    </section>
+
+    <section class="bio-section">
+      <h2 class="section-heading">[ about ]</h2>
+      <p class="bio-text">
+        Product manager with 5+ years leading product strategy and roadmaps for B2B SaaS and e-commerce products serving millions of users and driving hundreds of millions in revenue. Proven track record of translating customer insights and business goals into clear product strategy, measurable outcomes, and successful global releases.
+      </p>
+    </section>
+
+    <section class="highlights-section">
+      <h2 class="section-heading">[ recent projects ]</h2>
+      <ul class="exp-list">
+        <li class="exp-item">
+          <div class="exp-header">
+            <span class="exp-role">Globe</span>
+            <span class="exp-company"><a href="https://globe.blut.dev" target="_blank" rel="noopener">globe.blut.dev</a> &bull; <a href="https://github.com/micahblut/globe" target="_blank" rel="noopener">GitHub</a></span>
+          </div>
+          <p class="exp-desc">
+            A dependency-free interactive globe web app built with D3.js and TopoJSON to track visited and researched countries and subregions. Features offline-capable map geometry, localStorage autosaving, Markdown-link place notes, and JSON export/import backup functionality.
+          </p>
+        </li>
+        <li class="exp-item">
+          <div class="exp-header">
+            <span class="exp-role">Weather PWA</span>
+            <span class="exp-company"><a href="https://weather.blut.dev" target="_blank" rel="noopener">weather.blut.dev</a> &bull; <a href="https://github.com/micahblut/weather" target="_blank" rel="noopener">GitHub</a></span>
+          </div>
+          <p class="exp-desc">
+            A zero-backend weather, tide, and moon-phase Progressive Web App inspired by Fahrenheit. Operates entirely client-side using Open-Meteo Forecast, Air Quality, Geocoding, and Marine APIs alongside client-side reverse geocoding and astronomical phase algorithms.
+          </p>
+        </li>
+      </ul>
+    </section>
   </main>
 
   <div id="cookie-banner" role="dialog" aria-label="Cookie preferences">
-    <div class="cookie-view" id="cookie-default-view">
+    <div class="cookie-view">
       <p>This site uses cookies.</p>
       <div class="cookie-actions">
         <button id="cookie-reject">Reject all</button>
         <button id="cookie-configure-btn">Configure</button>
-        <button id="cookie-accept-all">Accept all</button>
-      </div>
-    </div>
-    <div class="cookie-view" id="cookie-configure-view" hidden>
-      <div class="cookie-options">
-        <label class="cookie-option"><input type="checkbox" value="chocolate-chip" checked> Chocolate Chip</label>
-        <label class="cookie-option"><input type="checkbox" value="peanut-butter" checked> Peanut Butter</label>
-        <label class="cookie-option"><input type="checkbox" value="millionaire-shortbread" checked> Millionaire's Shortbread</label>
-      </div>
-      <div class="cookie-actions">
-        <button id="cookie-back">← Back</button>
-        <button id="cookie-save">Save</button>
+        <button id="cookie-accept">Accept all</button>
       </div>
     </div>
   </div>
+
+  <dialog id="cookie-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-header" id="dialog-title">[ cookie recipe preferences ]</div>
+    <p class="dialog-intro">Select which cookie recipes you would like to save to your browser's local storage:</p>
+    <div class="dialog-options">
+      <label class="dialog-option"><input type="checkbox" value="chocolate-chip" checked> Chocolate Chip</label>
+      <label class="dialog-option"><input type="checkbox" value="peanut-butter" checked> Peanut Butter</label>
+      <label class="dialog-option"><input type="checkbox" value="molasses-crinkles" checked> Molasses Crinkles</label>
+    </div>
+    <div class="dialog-actions">
+      <button id="dialog-cancel-btn">Cancel</button>
+      <button id="dialog-save-btn">Save Selected</button>
+    </div>
+  </dialog>
 
   <script>
     const html = document.documentElement;
@@ -310,7 +506,7 @@
       themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
     }
 
-    // cookie banner
+    // cookie banner & dialog
     const COOKIE_TYPES = {
       'chocolate-chip': {
         name: 'Chocolate Chip',
@@ -320,15 +516,20 @@
         name: 'Peanut Butter',
         recipe: 'Mix 1 cup peanut butter, 1 cup sugar, 1 egg, 1 tsp vanilla, and ½ tsp baking soda. Roll into balls, press flat with a fork. Bake at 180°C for 10–12 min.'
       },
-      'millionaire-shortbread': {
-        name: "Millionaire's Shortbread",
-        recipe: 'Shortbread: rub 125g butter into 175g flour and 50g sugar, press into tin, bake at 180°C for 15 min. Caramel: simmer 100g butter, 100g sugar, and 1 tin condensed milk until golden, pour over base. Top with 200g melted chocolate. Chill 2 hrs.'
+      'molasses-crinkles': {
+        name: 'Molasses Crinkles',
+        recipe: 'Melt ¾ cup butter, mix with 1 cup brown sugar, 1 egg, and ¼ cup molasses. Sift 2¼ cups flour, 2 tsp baking soda, ½ tsp salt, 1 tsp cinnamon, 1 tsp ginger, and ½ tsp cloves. Mix, chill 1 hr, roll into balls, dip in sugar. Bake at 190°C for 10–12 min.'
       }
     };
 
     const banner = document.getElementById('cookie-banner');
-    const defaultView = document.getElementById('cookie-default-view');
-    const configureView = document.getElementById('cookie-configure-view');
+    const configureBtn = document.getElementById('cookie-configure-btn');
+    const rejectBtn = document.getElementById('cookie-reject');
+    const acceptBtn = document.getElementById('cookie-accept');
+
+    const dialog = document.getElementById('cookie-dialog');
+    const dialogSaveBtn = document.getElementById('dialog-save-btn');
+    const dialogCancelBtn = document.getElementById('dialog-cancel-btn');
 
     function dismissBanner() {
       banner.classList.remove('visible');
@@ -346,32 +547,52 @@
 
     const hasAnyCookie = Object.keys(COOKIE_TYPES).some(type => localStorage.getItem(`cookie-${type}`));
     if (!localStorage.getItem('cookie-consent') && !hasAnyCookie) {
-      requestAnimationFrame(() => banner.classList.add('visible'));
+      setTimeout(() => banner.classList.add('visible'), 400);
     }
 
-    document.getElementById('cookie-reject').addEventListener('click', () => {
+    rejectBtn.addEventListener('click', () => {
       localStorage.setItem('cookie-consent', 'rejected');
       dismissBanner();
     });
 
-    document.getElementById('cookie-accept-all').addEventListener('click', () => {
+    acceptBtn.addEventListener('click', () => {
       saveCookies(Object.keys(COOKIE_TYPES));
     });
 
-    document.getElementById('cookie-configure-btn').addEventListener('click', () => {
-      defaultView.hidden = true;
-      configureView.hidden = false;
+    configureBtn.addEventListener('click', () => {
+      dismissBanner();
+      dialog.showModal();
     });
 
-    document.getElementById('cookie-back').addEventListener('click', () => {
-      configureView.hidden = true;
-      defaultView.hidden = false;
-    });
-
-    document.getElementById('cookie-save').addEventListener('click', () => {
-      const checked = [...configureView.querySelectorAll('input[type="checkbox"]:checked')]
+    dialogSaveBtn.addEventListener('click', () => {
+      const checked = [...dialog.querySelectorAll('input[type="checkbox"]:checked')]
         .map(el => el.value);
       saveCookies(checked);
+      dialog.close();
+    });
+
+    function cancelDialog() {
+      localStorage.setItem('cookie-consent', 'rejected');
+      dialog.close();
+    }
+
+    dialogCancelBtn.addEventListener('click', cancelDialog);
+
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      cancelDialog();
+    });
+
+    dialog.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        cancelDialog();
+      }
     });
 
     // menu
