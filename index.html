@@ -16,6 +16,7 @@
       --fg: #000000;
       --border: #000000;
       --muted: #555555;
+      --link: #000000;
       --font: "Courier New", Courier, monospace;
     }
 
@@ -24,6 +25,11 @@
       --fg: #ffffff;
       --border: #ffffff;
       --muted: #aaaaaa;
+      --link: #ffff00;
+    }
+
+    a {
+      color: var(--link);
     }
 
     html, body {
@@ -115,7 +121,7 @@
     }
 
     nav ul li a {
-      color: var(--fg);
+      color: var(--link);
       text-decoration: none;
       font-size: 13px;
       letter-spacing: 0.05em;
@@ -314,12 +320,12 @@
     }
 
     .meta-links a {
-      color: var(--fg);
+      color: var(--link);
       text-decoration: underline;
     }
 
     .meta-links a:hover {
-      background-color: var(--fg);
+      background-color: var(--link);
       color: var(--bg);
       text-decoration: none;
     }
@@ -379,6 +385,11 @@
     .exp-company {
       font-size: 12px;
       color: var(--muted);
+    }
+
+    .exp-company a {
+      color: var(--link);
+      text-decoration: underline;
     }
 
     .exp-desc {
