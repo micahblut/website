@@ -483,7 +483,7 @@
 
   <dialog id="cookie-dialog" aria-labelledby="dialog-title">
     <div class="dialog-header" id="dialog-title">[ cookie recipe preferences ]</div>
-    <p class="dialog-intro">Select which cookie recipes you would like to save to your browser's local storage:</p>
+    <p class="dialog-intro">Select which cookie recipes you would like to save to your browser's cookies:</p>
     <div class="dialog-options">
       <label class="dialog-option"><input type="checkbox" value="chocolate-chip" checked> Chocolate Chip</label>
       <label class="dialog-option"><input type="checkbox" value="peanut-butter" checked> Peanut Butter</label>
@@ -544,6 +544,45 @@
       }
     };
 
+    function setCookie(name, value, days = 365) {
+      try {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        const isFile = location.protocol === 'file:';
+        document.cookie = isFile
+          ? `${name}=${encodeURIComponent(value)}; expires=${expires}`
+          : `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+      } catch (e) {}
+      try {
+        localStorage.setItem(name, value);
+      } catch (e) {}
+    }
+
+    function getCookie(name) {
+      let val = '';
+      try {
+        const match = document.cookie.split('; ').find(v => v.split('=')[0] === name);
+        if (match) {
+          val = decodeURIComponent(match.split('=').slice(1).join('='));
+        }
+      } catch (e) {}
+      if (!val) {
+        try {
+          val = localStorage.getItem(name) || '';
+        } catch (e) {}
+      }
+      return val;
+    }
+
+    function deleteCookie(name) {
+      try {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      } catch (e) {}
+      try {
+        localStorage.removeItem(name);
+      } catch (e) {}
+    }
+
     const banner = document.getElementById('cookie-banner');
     const configureBtn = document.getElementById('cookie-configure-btn');
     const rejectBtn = document.getElementById('cookie-reject');
@@ -558,22 +597,25 @@
     }
 
     function saveCookies(types) {
-      localStorage.setItem('cookie-consent', 'set');
-      types.forEach(type => {
-        if (COOKIE_TYPES[type]) {
-          localStorage.setItem(`cookie-${type}`, COOKIE_TYPES[type].recipe);
+      setCookie('cookie-consent', 'set');
+      Object.keys(COOKIE_TYPES).forEach(type => {
+        if (types.includes(type)) {
+          setCookie(`cookie-${type}`, COOKIE_TYPES[type].recipe);
+        } else {
+          deleteCookie(`cookie-${type}`);
         }
       });
       dismissBanner();
     }
 
-    const hasAnyCookie = Object.keys(COOKIE_TYPES).some(type => localStorage.getItem(`cookie-${type}`));
-    if (!localStorage.getItem('cookie-consent') && !hasAnyCookie) {
+    const hasAnyCookie = Object.keys(COOKIE_TYPES).some(type => getCookie(`cookie-${type}`));
+    if (!getCookie('cookie-consent') && !hasAnyCookie) {
       setTimeout(() => banner.classList.add('visible'), 400);
     }
 
     rejectBtn.addEventListener('click', () => {
-      localStorage.setItem('cookie-consent', 'rejected');
+      setCookie('cookie-consent', 'rejected');
+      Object.keys(COOKIE_TYPES).forEach(type => deleteCookie(`cookie-${type}`));
       dismissBanner();
     });
 
@@ -594,7 +636,7 @@
     });
 
     function cancelDialog() {
-      localStorage.setItem('cookie-consent', 'rejected');
+      setCookie('cookie-consent', 'rejected');
       dialog.close();
     }
 
