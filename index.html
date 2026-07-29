@@ -491,13 +491,24 @@
     const nav = document.getElementById('nav-drawer');
 
     // theme
-    const stored = localStorage.getItem('theme') || 'light';
-    setTheme(stored);
+    function getInitialTheme() {
+      const stored = localStorage.getItem('theme');
+      if (stored) return stored;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    setTheme(getInitialTheme());
 
     themeBtn.addEventListener('click', () => {
       const next = html.dataset.theme === 'light' ? 'dark' : 'light';
       setTheme(next);
       localStorage.setItem('theme', next);
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
     });
 
     function setTheme(t) {
