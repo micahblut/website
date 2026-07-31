@@ -2,7 +2,8 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta id="theme-color-meta" name="theme-color" content="#ffffff">
   <title>site</title>
   <style>
     *, *::before, *::after {
@@ -48,7 +49,7 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border);
-      padding: 0.5rem 1rem;
+      padding: calc(0.5rem + env(safe-area-inset-top)) 1rem 0.5rem;
       position: sticky;
       top: 0;
       background-color: var(--bg);
@@ -466,6 +467,15 @@
             A zero-backend weather, tide, and moon-phase Progressive Web App inspired by Fahrenheit. Operates entirely client-side using Open-Meteo Forecast, Air Quality, Geocoding, and Marine APIs alongside client-side reverse geocoding and astronomical phase algorithms.
           </p>
         </li>
+        <li class="exp-item">
+          <div class="exp-header">
+            <span class="exp-role">caffè quotidiano</span>
+            <span class="exp-company"><a href="https://coffee.blut.dev" target="_blank" rel="noopener">coffee.blut.dev</a> &bull; <a href="https://github.com/micahblut/coffee" target="_blank" rel="noopener">GitHub</a></span>
+          </div>
+          <p class="exp-desc">
+            A local-first, installable PWA coffee logbook for tracking bags, roasters, and brews. Logs grind size, dose, yield, and extraction time per brew, surfaces rating-vs-freshness insights, and tracks equipment cleaning schedules, all stored offline in IndexedDB with no backend.
+          </p>
+        </li>
       </ul>
     </section>
   </main>
@@ -500,6 +510,7 @@
     const themeBtn = document.getElementById('theme-btn');
     const menuBtn = document.getElementById('menu-btn');
     const nav = document.getElementById('nav-drawer');
+    const themeColorMeta = document.getElementById('theme-color-meta');
 
     // theme
     function getInitialTheme() {
@@ -526,6 +537,7 @@
       html.dataset.theme = t;
       themeBtn.textContent = t === 'dark' ? '☼' : '☾';
       themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      themeColorMeta.setAttribute('content', t === 'dark' ? '#000000' : '#ffffff');
     }
 
     // cookie banner & dialog
