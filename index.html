@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta id="theme-color-meta" name="theme-color" content="#ffffff">
+  <script>
+    (function () {
+      var stored = localStorage.getItem('theme');
+      var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = theme;
+      document.getElementById('theme-color-meta').setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
+    })();
+  </script>
   <title>site</title>
   <style>
     *, *::before, *::after {
@@ -510,16 +518,10 @@
     const themeBtn = document.getElementById('theme-btn');
     const menuBtn = document.getElementById('menu-btn');
     const nav = document.getElementById('nav-drawer');
-    const themeColorMeta = document.getElementById('theme-color-meta');
 
     // theme
-    function getInitialTheme() {
-      const stored = localStorage.getItem('theme');
-      if (stored) return stored;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-
-    setTheme(getInitialTheme());
+    themeBtn.textContent = html.dataset.theme === 'dark' ? '☼' : '☾';
+    themeBtn.setAttribute('aria-label', html.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
 
     themeBtn.addEventListener('click', () => {
       const next = html.dataset.theme === 'light' ? 'dark' : 'light';
@@ -537,7 +539,16 @@
       html.dataset.theme = t;
       themeBtn.textContent = t === 'dark' ? '☼' : '☾';
       themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-      themeColorMeta.setAttribute('content', t === 'dark' ? '#000000' : '#ffffff');
+
+      // iOS Safari can fail to repaint the safe-area/notch color when only
+      // the meta tag's `content` attribute is mutated; replacing the node
+      // forces it to pick up the new value.
+      const oldMeta = document.getElementById('theme-color-meta');
+      const newMeta = document.createElement('meta');
+      newMeta.id = 'theme-color-meta';
+      newMeta.name = 'theme-color';
+      newMeta.content = t === 'dark' ? '#000000' : '#ffffff';
+      oldMeta.replaceWith(newMeta);
     }
 
     // cookie banner & dialog
