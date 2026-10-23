@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta id="theme-color-meta" name="theme-color" content="#ffffff">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/js/theme.js"></script>
+  <title>Enter the Labyrinth — Micah Edelblut</title><meta name="description" content="Many have entered. None have come back out. An endless text labyrinth.">
+<meta property="og:title" content="Enter the Labyrinth — Micah Edelblut">
+<meta property="og:description" content="Many have entered. None have come back out.">
+<meta property="og:type" content="website"><meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="/styles.css">
+<meta name="robots" content="noindex"></head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <button id="menu-btn" aria-expanded="false" aria-controls="nav-drawer">[ menu ]</button>
+    </div>
+    <div class="header-right">
+      <button id="theme-btn" aria-label="Toggle light/dark mode">☾</button>
+    </div>
+  </header>
+
+  <nav id="nav-drawer" role="navigation" aria-label="Main menu">
+    <ul>
+      <li><a href="/">home</a></li>
+      <li><a href="/labyrinth/">the labyrinth</a></li>
+      <li><a href="mailto:micah@blut.dev">contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="site-main" id="labyrinth">
+<h2 class="section-heading">[ the labyrinth ]</h2>
+<p class="bio-text">Before you stands a doorway of black stone, and beyond it, a passage that bends out of sight.</p>
+<p class="bio-text">Many have entered. None have ever come back out.</p>
+<p class="bio-text"><strong>Are you sure you want to enter?</strong></p>
+<div class="lab-actions"><button class="btn-box" id="enter-labyrinth">enter the labyrinth</button><a class="btn-box" href="/">turn back</a></div>
+<noscript><p class="bio-text">The labyrinth needs JavaScript to open its doors.</p></noscript>
+</main>
+
+  <div id="cookie-banner" role="dialog" aria-label="Cookie preferences">
+    <div class="cookie-view">
+      <p>This site uses cookies.</p>
+      <div class="cookie-actions">
+        <button id="cookie-reject">Reject all</button>
+        <button id="cookie-configure-btn">Configure</button>
+        <button id="cookie-accept">Accept all</button>
+      </div>
+    </div>
+  </div>
+
+  <dialog id="cookie-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-header" id="dialog-title">[ cookie recipe preferences ]</div>
+    <p class="dialog-intro">Select which cookie recipes you would like to save to your browser's cookies:</p>
+    <div class="dialog-options">
+      <label class="dialog-option"><input type="checkbox" value="chocolate-chip" checked> Chocolate Chip</label>
+      <label class="dialog-option"><input type="checkbox" value="peanut-butter" checked> Peanut Butter</label>
+      <label class="dialog-option"><input type="checkbox" value="molasses-crinkles" checked> Molasses Crinkles</label>
+    </div>
+    <div class="dialog-actions">
+      <button id="dialog-cancel-btn">Cancel</button>
+      <button id="dialog-save-btn">Save Selected</button>
+    </div>
+  </dialog>
+
+  <script src="/js/site.js" defer></script>
+
+<script type="module" src="/js/labyrinth.js"></script></body>
+</html>

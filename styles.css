@@ -1,0 +1,438 @@
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --fg: #000000;
+      --border: #000000;
+      --muted: #555555;
+      --link: #000000;
+      --font: "Courier New", Courier, monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg: #000000;
+      --fg: #ffffff;
+      --border: #ffffff;
+      --muted: #aaaaaa;
+      --link: #ffffff;
+    }
+
+    a {
+      color: var(--link);
+    }
+
+    html, body {
+      height: 100%;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 14px;
+      transition: background-color 0.1s, color 0.1s;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────────── */
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding: calc(0.5rem + env(safe-area-inset-top)) 1rem 0.5rem;
+      position: sticky;
+      top: 0;
+      background-color: var(--bg);
+      z-index: 100;
+    }
+
+    .header-left,
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* menu button */
+    #menu-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 12px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    #menu-btn:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    /* theme toggle */
+    #theme-btn {
+      background: none;
+      border: none;
+      color: var(--fg);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.25rem 0.4rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    #theme-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* ── NAV DRAWER ──────────────────────────────────────────── */
+
+    nav {
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.15s ease, padding 0.15s ease;
+    }
+
+    nav.open {
+      max-height: 400px;
+      padding: 0.75rem 1rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    nav ul li a {
+      color: var(--link);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    nav ul li a::before {
+      content: "> ";
+      color: var(--muted);
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── MAIN ────────────────────────────────────────────────── */
+
+    main {
+      padding: 2rem 1rem;
+      max-width: 860px;
+    }
+
+    /* ── COOKIE BANNER ───────────────────────────────────────── */
+
+    #cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid var(--border);
+      background-color: var(--bg);
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transform: translateY(100%);
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #cookie-banner.visible {
+      transform: translateY(0);
+    }
+
+    .cookie-view {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .cookie-view p {
+      font-size: 13px;
+      flex: 1;
+      white-space: nowrap;
+    }
+
+    .cookie-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .cookie-actions button {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 12px;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .cookie-actions button:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    /* ── COOKIE DIALOG MODAL ─────────────────────────────────── */
+
+    dialog#cookie-dialog {
+      background-color: var(--bg);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      max-width: 480px;
+      width: calc(100% - 2rem);
+      margin: auto;
+      font-family: var(--font);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    dialog#cookie-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+    }
+
+    .dialog-header {
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .dialog-intro {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .dialog-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dialog-option {
+      cursor: pointer;
+      font-size: 13px;
+      user-select: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .dialog-option input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .dialog-option::before {
+      content: "[ ] ";
+      color: var(--muted);
+    }
+
+    .dialog-option:has(input:checked)::before {
+      content: "[x] ";
+      color: var(--fg);
+      font-weight: bold;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .dialog-actions button {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 12px;
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+    }
+
+    .dialog-actions button:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    /* ── PROFILE & BIO STYLES ───────────────────────────────── */
+
+    .hero {
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 1.6rem;
+      font-weight: bold;
+      letter-spacing: 0;
+      margin-bottom: 0.3rem;
+    }
+
+    .hero .role-title {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 1rem;
+    }
+
+    .meta-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      font-size: 12px;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .meta-links a {
+      color: var(--link);
+      text-decoration: underline;
+    }
+
+    .meta-links a:hover {
+      background-color: var(--link);
+      color: var(--bg);
+      text-decoration: none;
+    }
+
+    section {
+      margin-bottom: 2rem;
+    }
+
+    .section-heading {
+      font-size: 12px;
+      font-weight: normal;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 0.4rem;
+    }
+
+    .bio-text {
+      line-height: 1.7;
+      font-size: 13px;
+      margin-bottom: 1rem;
+    }
+
+    .bio-text strong {
+      color: var(--fg);
+      font-weight: bold;
+    }
+
+    .exp-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .exp-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .exp-role {
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .exp-company {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .exp-company a {
+      color: var(--link);
+      text-decoration: underline;
+    }
+
+    .exp-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .skills-list {
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .skills-list strong {
+      color: var(--fg);
+    }
+  
+/* ── LABYRINTH ─────────────────────────────── */
+.lab-meta { font-size: 11px; color: var(--muted); word-break: break-all; margin-bottom: 1rem; }
+.lab-log { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.5rem; }
+.lab-entry { font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
+.lab-entry.you { color: var(--muted); }
+.lab-entry.you::before { content: "> "; }
+.lab-entry.speech { padding-left: 1rem; border-left: 1px dashed var(--border); }
+.lab-entry.system { font-size: 12px; color: var(--muted); font-style: italic; }
+.lab-cursor::after { content: "▌"; animation: lab-blink 1s steps(1) infinite; }
+@keyframes lab-blink { 50% { opacity: 0; } }
+.lab-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.lab-actions .btn-box { text-decoration: none; display: inline-block; }
+.lab-subhead { font-size: 11px; color: var(--muted); letter-spacing: 0; text-transform: uppercase; margin: 0.75rem 0 0.4rem; }
+.lab-input { display: flex; gap: 0.5rem; margin: 1rem 0; }
+.lab-input input {
+  flex: 1; background: none; border: 1px solid var(--border); color: var(--fg);
+  font-family: var(--font); font-size: 13px; padding: 0.3rem 0.5rem;
+}
+.lab-input input:focus { outline: 1px dashed var(--border); outline-offset: 2px; }
+.lab-status { font-size: 12px; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 0.75rem; line-height: 1.7; }
+
+[hidden] { display: none !important; }
+.btn-box {
+  background: none; border: 1px solid var(--border); color: var(--fg);
+  font-family: var(--font); font-size: 12px; padding: 0.25rem 0.6rem;
+  cursor: pointer; line-height: 1.4;
+}
+.btn-box:hover:not(:disabled) { background: var(--fg); color: var(--bg); }
+.btn-box:disabled { opacity: 0.4; cursor: not-allowed; }
+html[data-labyrinth="entered"] header, html[data-labyrinth="entered"] nav { display: none; }
+.lab-actions .btn-box { white-space: normal; max-width: 100%; }
+.lab-input input { min-width: 0; }
+.cookie-view p { white-space: normal; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
