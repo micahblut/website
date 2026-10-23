@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <title>Page not found — Micah Edelblut</title>
+</head>
+<body>
+  <p>Page not found. <a href="/">Return home</a>.</p>
+  <script>
+    const match = location.pathname.match(/^\/labyrinth\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?$/i);
+    if (match) {
+      location.replace(`/labyrinth/?chamber=${encodeURIComponent(match[1])}`);
+    }
+  </script>
+</body>
+</html>

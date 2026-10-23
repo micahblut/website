@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta id="theme-color-meta" name="theme-color" content="#ffffff">
+  <script>
+    // GitHub Pages serves this page after its 404 fallback redirects a chamber URL here.
+    const chamber = new URLSearchParams(location.search).get('chamber');
+    if (chamber && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(chamber)) {
+      history.replaceState({}, '', `/labyrinth/${chamber}`);
+    }
+  </script>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <script src="/js/theme.js"></script>
   <title>Enter the Labyrinth — Micah Edelblut</title><meta name="description" content="Many have entered. None have come back out. An endless text labyrinth.">
