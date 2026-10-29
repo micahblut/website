@@ -6,3 +6,5 @@
 - Keep generated room ambience and marvels as strings and consume one random draw per detail; room records and gameplay remain stable while compatible rare scenery can vary.
 - Keep character cards in `js/characters.js`, the asleep-narrator guard puzzle in `js/guards.js`, and conversation/trade rules in `js/encounters.js`; the AI may only change the satchel through action tags listed on a card and validated by `applyAction`, so free text can never create items.
 - Pick a room's character from its own `character:<id>` seed; editing the cast must never change doors, loot or other room content.
+- Keep the narrator's standing instructions in `js/prompts.js`: a shared foundation (labyrinth rules plus permitted invention) and a separate narrator voice; character sessions get the foundation plus their own first-person card prompt, so the two voices never contradict.
+- Bound character conversations with the turn limits in `js/encounters.js` rather than saved conversation memory; each scene stays short enough for the on-device model's context and nudges the wanderer onward.
