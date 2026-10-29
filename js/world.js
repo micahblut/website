@@ -6,6 +6,33 @@ const SOUND = ["distant dripping", "a faint hum, like a held note", "footsteps t
 const SMELL = ["wet stone", "old parchment", "candle smoke", "rust", "cold iron and salt", "crushed mint", "nothing at all"];
 export const TREASURES = ["a gilded compass whose needle spins endlessly", "a silver locket containing your own portrait", "a map of this very room", "a crown of tarnished brass", "an hourglass with sand that falls upward", "a ruby the size of a thumb", "a coin stamped with a face on both sides", "a ring that fits no finger", "a jar of captured starlight", "a feather quill that writes only questions"];
 const INSCRIPTIONS = ["ALL WHO ENTER HAVE ALWAYS BEEN HERE", "THE WAY OUT IS THE WAY IN", "YOU HAVE READ THIS BEFORE", "COUNT THE DOORS. THEN STOP COUNTING.", "EVERY KEY OPENS SOMETHING. NOTHING OPENS OUTWARD.", "HERE THE MAP ENDS. THE MAZE DOES NOT.", "THE GUARDS DISAGREE. THE WALLS DO NOT."];
+// Rare rooms: RARE_CHANCE of all rooms are rare; of those, GLORIOUS_SHARE are glorious and the rest sinister.
+export const RARE_CHANCE = 0.08;
+export const GLORIOUS_SHARE = 0.5;
+export const RARE = {
+  glorious: {
+    walls: ["walls crusted with violet amethyst crystals", "pale pink salt, carved into the vaulted ribs of a cathedral", "veins of raw gold running through white quartz", "mother-of-pearl that shifts colour as you move", "polished jade inlaid with silver script", "frozen waterfalls of clear crystal"],
+    light: ["shafts of light refracting through a thousand crystals", "a still emerald pool glowing from beneath", "rose-gold light pouring through salt windows", "drifting motes that shine like fireflies", "a chandelier of living ice"],
+    sound: ["a choir of humming crystals", "water chiming softly over stone", "a single sustained note, warm and endless", "the gentle ring of glass touching glass"],
+    smell: ["clean mountain air", "salt and sweet resin", "rain on warm stone", "blossoms that cannot grow here"],
+    marvels: ["A glittering emerald pool fills the centre, so clear you can see coins at the bottom.", "The ceiling rises into a cathedral vault, every arch carved from salt.", "Crystals as tall as a person grow from the floor, catching the light.", "A garden of stone flowers blooms in the cracks, each petal a gemstone.", "A great window of rose quartz looks out onto a sky that should not exist."]
+  },
+  sinister: {
+    walls: ["rusted iron plates slick with something dark", "stone stained in long rust-red streaks", "black rock scratched with countless tally marks", "walls hung with heavy, swaying chains", "bricks mortared with what looks like old bone"],
+    light: ["a lantern that flickers whenever you look away", "a dim red glow seeping from the cracks", "a single candle burning with a black flame", "almost no light at all, and it is shrinking"],
+    sound: ["whispering just too quiet to make out", "the slow clink of chains moving by themselves", "steady dripping, thicker than water", "your name, spoken once, from behind you", "breathing that is not your own"],
+    smell: ["blood and wet iron", "rot beneath the stone", "smoke and burnt hair", "a sickly sweetness"],
+    marvels: ["Chains hang from the ceiling, and some of them are still swaying.", "Something drips steadily from above, pooling red on the floor.", "Dark whispers circle the room, always just behind your ear.", "Manacles are bolted to the wall at the height of a kneeling person.", "Handprints smear the walls, all of them reaching for the doors."]
+  }
+};
+function pickRarity(id) {
+  const rng = rngFor(`rarity:${id}`);
+  if (rng() >= RARE_CHANCE)
+    return null;
+  const kind = rng() < GLORIOUS_SHARE ? "glorious" : "sinister";
+  const set = RARE[kind];
+  return { kind, marvel: pick(rng, set.marvels), ambience: { walls: pick(rng, set.walls), light: pick(rng, set.light), sound: pick(rng, set.sound), smell: pick(rng, set.smell) } };
+}
 function pickFeature(rng, exits) {
   const r = rng();
   if (r < 0.25)
@@ -29,11 +56,16 @@ export function generateRoom(id) {
   const exits = dirs.map((dir) => ({ dir, locked: rng() < 0.22, to: neighbourId(id, dir) }));
   if (exits.every((e) => e.locked) && exits[0])
     exits[0].locked = false;
+  const feature = pickFeature(rng, exits);
+  const ambience = { walls: pick(rng, WALLS), light: pick(rng, LIGHT), sound: pick(rng, SOUND), smell: pick(rng, SMELL) };
+  const rare = pickRarity(id);
   return {
     id,
     exits,
-    feature: pickFeature(rng, exits),
-    ambience: { walls: pick(rng, WALLS), light: pick(rng, LIGHT), sound: pick(rng, SOUND), smell: pick(rng, SMELL) }
+    feature,
+    ambience: rare ? rare.ambience : ambience,
+    rarity: rare ? rare.kind : "standard",
+    marvel: rare ? rare.marvel : null
   };
 }
 export function neighbourId(id, dir) {
@@ -49,7 +81,7 @@ export function describeRoom(room) {
     guards: "Two guards stand motionless by the doors, watching you.",
     inscription: room.feature.kind === "inscription" ? `Words are carved into the wall: “${room.feature.text}”` : ""
   }[room.feature.kind];
-  return `Walls of ${a.walls}, lit by ${a.light}. You hear ${a.sound} and smell ${a.smell}. ${feature}
+  return `${/^walls /.test(a.walls) ? a.walls[0].toUpperCase() + a.walls.slice(1) : `Walls of ${a.walls}`}, lit by ${a.light}. You hear ${a.sound} and smell ${a.smell}.${room.marvel ? ` ${room.marvel}` : ""} ${feature}
 Doors lead: ${exits}.`;
 }
 export function roomFacts(room) {
@@ -60,6 +92,7 @@ export function roomFacts(room) {
     `Light: ${room.ambience.light}`,
     `Sound: ${room.ambience.sound}`,
     `Smell: ${room.ambience.smell}`,
+    ...room.rarity === "glorious" ? ["Atmosphere: a rare, glorious chamber — awe-inspiring and beautiful", `Marvel: ${room.marvel}`] : room.rarity === "sinister" ? ["Atmosphere: a rare, sinister chamber — unsettling horror and dread", `Marvel: ${room.marvel}`] : [],
     `Feature: ${feature}`,
     `Doors (exactly these, no others): ${room.exits.map((e) => `${e.dir}${e.locked ? " (locked)" : ""}`).join(", ")}`
   ].join(`

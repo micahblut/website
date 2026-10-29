@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { generateRoom, neighbourId, DIRECTIONS, roomFacts } from '../js/world.js';
+import { generateRoom, neighbourId, DIRECTIONS, roomFacts, describeRoom, RARE_CHANCE, GLORIOUS_SHARE } from '../js/world.js';
 import { UUID_RE, uuidFrom } from '../js/rng.js';
 import { guardAnswer } from '../js/guards.js';
 import { loadSatchel, saveSatchel, loadMemory, remember } from '../js/storage.js';
@@ -52,4 +52,19 @@ test('inventory and room memory are local, with duplicate actions remembered onc
   assert.deepEqual(loadSatchel(), { keys: 2, treasures: ['a ruby'], steps: 7 });
   remember('opened', id); remember('opened', id);
   assert.deepEqual(loadMemory().opened, [id]);
+});
+test('rare rooms appear about 8% of the time, split evenly between glorious and sinister', () => {
+  assert.equal(RARE_CHANCE, 0.08); assert.equal(GLORIOUS_SHARE, 0.5);
+  const counts = { standard: 0, glorious: 0, sinister: 0 };
+  for (let i = 0; i < 20000; i++) counts[generateRoom(uuidFrom(String(i))).rarity]++;
+  const rare = counts.glorious + counts.sinister;
+  assert.ok(Math.abs(rare / 20000 - 0.08) < 0.01, `rare share ${rare / 20000}`);
+  assert.ok(Math.abs(counts.glorious / rare - 0.5) < 0.06, `glorious share ${counts.glorious / rare}`);
+});
+test('rare rooms describe their marvel; standard rooms do not have one', () => {
+  for (let i = 0; i < 2000; i++) {
+    const room = generateRoom(uuidFrom(String(i)));
+    if (room.rarity === 'standard') assert.equal(room.marvel, null);
+    else { assert.ok(describeRoom(room).includes(room.marvel)); assert.ok(roomFacts(room).includes(room.marvel)); }
+  }
 });
