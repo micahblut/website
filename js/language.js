@@ -313,6 +313,8 @@ export function describeRoom(room) {
     ambienceSentence(a.sound, "sound"),
     ambienceSentence(a.smell, "smell"),
     room.marvel,
+    a.detail,
+    a.air,
     feature,
   ].filter(Boolean).join(" ") + `\nDoors lead: ${exits}.`;
 }
@@ -329,6 +331,8 @@ export function roomFacts(room) {
     `Light: ${ambienceSentence(room.ambience.light, "source")}`,
     `Sound: ${ambienceSentence(room.ambience.sound, "sound")}`,
     `Smell: ${ambienceSentence(room.ambience.smell, "smell")}`,
+    ...(room.ambience.detail ? [`Scenic detail (not interactive): ${room.ambience.detail}`] : []),
+    ...(room.ambience.air ? [`Air: ${room.ambience.air}`] : []),
     ...room.rarity === "glorious" ? ["Atmosphere: a rare, glorious chamber — awe-inspiring and beautiful", `Marvel: ${room.marvel}`] : room.rarity === "sinister" ? ["Atmosphere: a rare, sinister chamber — unsettling horror and dread", `Marvel: ${room.marvel}`] : [],
     `Feature: ${feature}`,
     `Doors (exactly these, no others): ${room.exits.map((e) => `${e.dir}${e.locked ? " (locked)" : ""}`).join(", ")}`
