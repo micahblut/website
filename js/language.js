@@ -15,6 +15,7 @@ export const WALLS = [
   { text: "tarnished copper panels", form: "material" },
   { text: "packed earth threaded with roots", form: "material" },
   { text: "glazed green tiles", form: "material" },
+  { text: "lichen spotted slate", form: "material" },
 ];
 export const LIGHT = [
   { text: "a guttering torch", form: "source" },
@@ -23,6 +24,7 @@ export const LIGHT = [
   { text: "pale light with no source", form: "source" },
   { text: "a crack of grey daylight high above", form: "source" },
   { text: "an iron brazier of blue coals", form: "source" },
+  { text: "glowing runes that swirl like fog", form: "source" },
   { text: "near-total darkness", form: "darkness" },
 ];
 export const SOUND = [
@@ -33,6 +35,11 @@ export const SOUND = [
   { text: "silence so thick it rings", form: "silence" },
   { text: "the slow creak of settling stone", form: "sound" },
   { text: "a far-off bell", form: "sound" },
+  { text: "the soft ticking of a clock that cannot be seen", form: "sound" },
+  { text: "a deafening rumble of falling water", form: "sound" },
+  { text: "a single sustained note, warm and endless", form: "sound" },
+  { text: "a silence as final as the grave", form: "silence" },
+  { text: "an incipient whine, like a mosquito trapped in a jar", form: "sound" },
 ];
 export const SMELL = [
   { text: "wet stone", form: "smell" },
@@ -41,15 +48,21 @@ export const SMELL = [
   { text: "rust", form: "smell" },
   { text: "cold iron and salt", form: "smell" },
   { text: "crushed mint", form: "smell" },
+  { text: "potent sulfur", form: "smell" },
+  { text: "black mold", form: "smell" },
+  { text: "dust", form: "smell" },
+  { text: "mildew", form: "smell" },
+  { text: "the sea at low tide", form: "smell" },
+  { text: "burning ozone", form: "smell" },
   { text: "nothing at all", form: "odorless" },
 ];
 export const TREASURES = [
   "a gilded compass whose needle spins endlessly",
   "a silver locket containing your own portrait",
-  "a map of this very room",
   "a crown of tarnished brass",
+  "a tiara of blackened silver, set with a single ruby",
   "an hourglass with sand that falls upward",
-  "a ruby the size of a thumb",
+  "a ruby the size of a walnut, warm to the touch",
   "a coin stamped with a face on both sides",
   "a ring that fits no finger",
   "a jar of captured starlight",
@@ -63,6 +76,7 @@ export const INSCRIPTIONS = [
   "EVERY KEY OPENS SOMETHING. NOTHING OPENS OUTWARD.",
   "HERE THE MAP ENDS. THE MAZE DOES NOT.",
   "THE GUARDS DISAGREE. THE WALLS DO NOT.",
+  "THE TREASURES WEIGH YOU DOWN AND BUY YOU NOTHING."
 ];
 export const RARE = {
   glorious: {
@@ -79,24 +93,24 @@ export const RARE = {
       { text: "a still emerald pool glowing from beneath", form: "source", tags: ["emerald-pool"] },
       { text: "rose-gold light pouring through salt windows", form: "glow" },
       { text: "drifting motes that shine like fireflies", form: "source" },
-      { text: "a chandelier of living ice", form: "source" },
+      { text: "a chandelier of glittering ice", form: "source" },
     ],
     sound: [
       { text: "a choir of humming crystals", form: "sound" },
       { text: "water chiming softly over stone", form: "sound" },
-      { text: "a single sustained note, warm and endless", form: "sound" },
+      { text: "a sustained note, warm and endless", form: "sound" },
       { text: "the gentle ring of glass touching glass", form: "sound" },
     ],
     smell: [
       { text: "clean mountain air", form: "smell" },
       { text: "salt and sweet resin", form: "smell" },
       { text: "rain on warm stone", form: "smell" },
-      { text: "blossoms that cannot grow here", form: "smell" },
+      { text: "blossoms that could never grow here", form: "smell" },
     ],
     marvels: [
       { text: "A glittering emerald pool fills the centre, so clear you can see coins at the bottom.", form: "sentence", tags: ["emerald-pool"] },
       { text: "The ceiling rises into a cathedral vault, every arch carved from salt.", form: "sentence", tags: ["salt-vault"] },
-      { text: "Crystals as tall as a person grow from the floor, catching the light.", form: "sentence" },
+      { text: "Crystals as tall as trees growing from the floor, catching the light.", form: "sentence" },
       { text: "A garden of stone flowers blooms in the cracks, each petal a gemstone.", form: "sentence" },
       { text: "A great window of rose quartz looks out onto a sky that should not exist.", form: "sentence" },
     ]
@@ -108,10 +122,11 @@ export const RARE = {
       { text: "black rock scratched with countless tally marks", form: "material" },
       { text: "The walls are hung with heavy, swaying chains.", form: "sentence", tags: ["chains"] },
       { text: "bricks mortared with what looks like old bone", form: "material" },
+      { text: "rows of skulls, stacked like bricks, their eye sockets staring", form: "material" },
     ],
     light: [
       { text: "a lantern that flickers whenever you look away", form: "source" },
-      { text: "a dim red glow seeping from the cracks", form: "glow" },
+      { text: "a dim red glow seeping from cracks in the floor", form: "glow" },
       { text: "a single candle burning with a black flame", form: "source" },
       { text: "There is almost no light at all, and it is shrinking.", form: "sentence" },
     ],
@@ -121,6 +136,8 @@ export const RARE = {
       { text: "steady dripping, thicker than water", form: "sound", tags: ["dripping"] },
       { text: "Your name is spoken once, from behind you.", form: "sentence" },
       { text: "breathing that is not your own", form: "sound" },
+      { text: "frantic whispering, like a crowd of people in a panic", form: "sound" },
+      { text: "panicked whispers that seem to come from inside your head", form: "sound" },
     ],
     smell: [
       { text: "blood and wet iron", form: "smell" },

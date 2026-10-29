@@ -34,16 +34,17 @@ export const CAST = [
   {
     id: "cartographer",
     name: "the Cartographer",
-    appearance: "A stooped old woman sits cross-legged on the floor, surrounded by sheets of paper covered in maps. Ink stains her fingers to the wrist.",
-    personality: "Distracted, warm, and a little mad. She mutters measurements, loses her train of thought, and calls the wanderer 'little surveyor'.",
+    appearance: "A stooped old woman sits cross-legged on the floor, surrounded by sheafs of parchment covered in maps. Ink stains her fingers.",
+    personality: "Distracted, warm, and a little nutty. She mutters measurements, loses her train of thought, and calls the wanderer 'lost surveyor'.",
     knows: [
       "She has mapped this labyrinth for longer than she can remember, and no two of her maps agree.",
       "There is no way out. She stopped looking for one long ago, and is at peace with it.",
-      "Keys in the labyrinth snap after one use. She thinks the locks eat them.",
+      "Keys in the labyrinth snap after one use.",
       "She once met two guards who argued with each other; she could never tell which one was lying."
     ],
     believes: [
       "The rooms rearrange themselves when nobody is looking.",
+      "The locks are eating the keys.",
       "Treasures are landmarks, and with enough of them her maps will finally agree."
     ],
     conceals: [
@@ -51,7 +52,7 @@ export const CAST = [
     ],
     motivations: [
       "She wants treasures for her maps, and will ask for them.",
-      "She wants company, but she also has measurements to take and will drift back to her work."
+      "She wants company, but she has grown too old to wander in search of treasures herself. She will ask the wanderer to bring her treasures."
     ],
     honesty: "Always truthful, though she sometimes forgets things.",
     actions: {
