@@ -4,3 +4,5 @@
 - Preserve the existing native JavaScript module stack and the public exports of `js/world.js` when reorganizing room content; the site loads without a build step.
 - Store grammatical forms and optional scene tags alongside English wording in `js/language.js`; use its templates and compatibility filter rather than guessing grammar from text, keeping new prose additions explicit and dependency-free.
 - Keep generated room ambience and marvels as strings and consume one random draw per detail; room records and gameplay remain stable while compatible rare scenery can vary.
+- Keep character cards in `js/characters.js`, the asleep-narrator guard puzzle in `js/guards.js`, and conversation/trade rules in `js/encounters.js`; the AI may only change the satchel through action tags listed on a card and validated by `applyAction`, so free text can never create items.
+- Pick a room's character from its own `character:<id>` seed; editing the cast must never change doors, loot or other room content.

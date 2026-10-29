@@ -1,3 +1,4 @@
+import { characterById } from "./characters.js";
 // English room wording lives here; room selection and probabilities live in world.js.
 // Each ambience entry has text and a grammatical form used by the templates below.
 // Marvels use the sentence form. Optional tags identify scene details that should
@@ -179,7 +180,7 @@ export function describeRoom(room) {
     empty: room.marvel ? "" : "There is nothing here to take or disturb.",
     chest: room.feature.kind === "chest" && room.feature.locked ? "A heavy chest sits against the wall, bound with a padlock." : "A wooden chest sits against the wall, its lid unlatched.",
     key: "Something glints on the floor: a small iron key.",
-    guards: "Two guards stand motionless by the doors, watching you.",
+    encounter: "Two guards stand motionless by the doors, watching you.",
     inscription: room.feature.kind === "inscription" ? `Words are carved into the wall: “${room.feature.text}”` : ""
   }[room.feature.kind];
   return [
@@ -191,9 +192,14 @@ export function describeRoom(room) {
     feature,
   ].filter(Boolean).join(" ") + `\nDoors lead: ${exits}.`;
 }
+// Awake narration describes the room's character; the asleep text above shows the guards.
+function encounterFact(id) {
+  const c = characterById(id);
+  return c ? `${c.name} is here. ${c.appearance} (Describe them, but do not speak for them yet.)` : "no interactive feature";
+}
 export function roomFacts(room) {
   const f = room.feature;
-  const feature = f.kind === "chest" ? `a ${f.locked ? "padlocked" : "closed but unlocked"} chest (do not reveal contents)` : f.kind === "key" ? "a small iron key lying on the floor" : f.kind === "guards" ? "two silent guards, one on the left and one on the right (never say or hint whether either of them lies)" : f.kind === "inscription" ? `an inscription on the wall reading exactly: "${f.text}"` : "no interactive feature; retain all the surroundings and any marvel described above";
+  const feature = f.kind === "chest" ? `a ${f.locked ? "padlocked" : "closed but unlocked"} chest (do not reveal contents)` : f.kind === "key" ? "a small iron key lying on the floor" : f.kind === "encounter" ? encounterFact(f.character) : f.kind === "inscription" ? `an inscription on the wall reading exactly: "${f.text}"` : "no interactive feature; retain all the surroundings and any marvel described above";
   return [
     `Walls: ${ambienceSentence(room.ambience.walls, "material")}`,
     `Light: ${ambienceSentence(room.ambience.light, "source")}`,

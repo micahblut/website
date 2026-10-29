@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { generateRoom, neighbourId, DIRECTIONS, roomFacts, describeRoom, RARE_CHANCE, GLORIOUS_SHARE } from '../js/world.js';
+import { generateRoom, neighbourId, DIRECTIONS, roomFacts, describeRoom, RARE_CHANCE, GLORIOUS_SHARE, ENCOUNTER_CHANCE } from '../js/world.js';
 import { UUID_RE, uuidFrom } from '../js/rng.js';
 import { guardAnswer } from '../js/guards.js';
+import { CAST } from '../js/characters.js';
 import { loadSatchel, saveSatchel, loadMemory, remember } from '../js/storage.js';
 
 const id = '3f1c2a9e-1b2c-4d3e-8f00-123456789abc';
@@ -18,31 +19,33 @@ test('wandering always has at least two doors and an unlocked way onward', () =>
     assert.ok(room.exits.length >= 2); assert.ok(room.exits.some(e => !e.locked));
   }
 });
-test('independent guards can have all four personality pairs', () => {
-  const pairs = new Set();
-  for (let i = 0; i < 1000; i++) {
-    const f = generateRoom(uuidFrom(String(i))).feature;
-    if (f.kind === 'guards') pairs.add(`${f.lies.left}:${f.lies.right}`);
+test('about 20% of rooms hold an encounter, with the liar on either side and a character from the cast', () => {
+  assert.equal(ENCOUNTER_CHANCE, 0.2);
+  const sides = new Set(); const people = new Set(); let count = 0;
+  for (let i = 0; i < 20000; i++) {
+    const room = generateRoom(uuidFrom(String(i))); const f = room.feature;
+    if (f.kind !== 'encounter') continue;
+    count++; sides.add(f.liar); people.add(f.character);
+    assert.ok(room.exits.some(e => e.dir === f.falseDoor));
   }
-  assert.deepEqual([...pairs].sort(), ['false:false', 'false:true', 'true:false', 'true:true']);
+  assert.ok(Math.abs(count / 20000 - 0.2) < 0.01, `encounter share ${count / 20000}`);
+  assert.deepEqual([...sides].sort(), ['left', 'right']);
+  assert.equal(people.size, CAST.length);
 });
-test('honest guards say there is no exit, regardless of their companion', () => {
-  for (const other of [true, false]) {
-    assert.equal(guardAnswer(false, other, 'any-exit', 'north'), 'No, there is no way out.');
-    assert.equal(guardAnswer(false, other, 'exit-door', 'north'), 'No door leads out.');
+test('the honest guard says there is no exit; the liar claims one', () => {
+  for (const liar of ['left', 'right']) {
+    const honest = liar === 'left' ? 'right' : 'left';
+    assert.equal(guardAnswer(liar, honest, 'any-exit', 'north'), 'No, there is no way out.');
+    assert.equal(guardAnswer(liar, honest, 'exit-door', 'north'), 'No door leads out.');
+    assert.equal(guardAnswer(liar, liar, 'exit-door', 'east'), 'The east door leads out.');
+    assert.equal(guardAnswer(liar, liar, 'any-exit', 'east'), 'Yes, there is a way out.');
   }
 });
-test('lying guards falsely claim an exit', () => {
-  for (const other of [true, false]) {
-    assert.equal(guardAnswer(true, other, 'exit-door', 'east'), 'The east door leads out.');
-    assert.equal(guardAnswer(true, other, 'any-exit', 'east'), 'Yes, there is a way out.');
-  }
-});
-test('matching pairs vouch for each other; mixed pairs accuse', () => {
-  for (const asked of [true, false]) for (const other of [true, false]) {
-    assert.equal(guardAnswer(asked, other, 'other-liar', 'north'), asked === other ? 'No, the other guard tells the truth.' : 'Yes, the other guard lies.');
-    assert.equal(guardAnswer(asked, other, 'other-says', 'north'), asked === other ? 'They would say no, there is no way out.' : 'They would say yes, there is a way out.');
-    assert.equal(guardAnswer(asked, other, 'you-liar', 'north'), 'No, I do not lie.');
+test('both guards deny lying, accuse each other, and give the same answer about the other', () => {
+  for (const liar of ['left', 'right']) for (const side of ['left', 'right']) {
+    assert.equal(guardAnswer(liar, side, 'you-liar', 'north'), 'No, I do not lie.');
+    assert.equal(guardAnswer(liar, side, 'other-liar', 'north'), 'Yes, the other guard lies.');
+    assert.equal(guardAnswer(liar, side, 'other-says', 'north'), 'They would say yes, there is a way out.');
   }
 });
 test('inventory and room memory are local, with duplicate actions remembered once', () => {
