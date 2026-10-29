@@ -1,5 +1,6 @@
 import { pick, rngFor, uuidFrom } from "./rng.js";
 import { WALLS, LIGHT, SOUND, SMELL, TREASURES, INSCRIPTIONS, RARE, compatibleEntries } from "./language.js";
+import { DETAILS, AIR } from "./atmosphere.js";
 import { CAST } from "./characters.js";
 // Preserve existing imports used by the game and tests.
 export { TREASURES, RARE, describeRoom, roomFacts } from "./language.js";
@@ -63,11 +64,14 @@ export function generateRoom(id) {
   const feature = pickFeature(id, rng, exits);
   const ambience = { walls: pick(rng, WALLS).text, light: pick(rng, LIGHT).text, sound: pick(rng, SOUND).text, smell: pick(rng, SMELL).text };
   const rare = pickRarity(id);
+  // Independent seeds keep existing doors, loot, ambience and rarity unchanged.
+  const detail = pick(rngFor(`detail:${id}`), DETAILS);
+  const air = pick(rngFor(`air:${id}`), AIR);
   return {
     id,
     exits,
     feature,
-    ambience: rare ? rare.ambience : ambience,
+    ambience: { ...(rare ? rare.ambience : ambience), detail, air },
     rarity: rare ? rare.kind : "standard",
     marvel: rare ? rare.marvel : null
   };

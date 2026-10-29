@@ -6,12 +6,17 @@ import { uuidFrom } from '../js/rng.js';
 
 const entries = [...WALLS, ...LIGHT, ...SOUND, ...SMELL, ...Object.values(RARE).flatMap(set => Object.values(set).flat())];
 test('every phrase declares a supported grammatical form and has an unambiguous lookup', () => {
-  assert.equal(new Set(entries.map(entry => entry.text)).size, entries.length);
+  const lookup = new Map();
+  for (const entry of entries) {
+    // Shared wording across atmospheres is valid when its sentence form and tags agree.
+    if (lookup.has(entry.text)) assert.deepEqual(entry, lookup.get(entry.text));
+    lookup.set(entry.text, entry);
+  }
   for (const entry of entries) {
     assert.equal(typeof entry.text, 'string');
     assert.equal(typeof SENTENCE_PATTERNS[entry.form], 'function');
   }
-  assert.equal(LIGHT[6].form, 'darkness');
+  assert.equal(LIGHT.find(entry => entry.text === 'near-total darkness').form, 'darkness');
   assert.equal(RARE.glorious.walls[2].form, 'detail');
   assert.equal(RARE.sinister.light[3].form, 'sentence');
 });
@@ -43,7 +48,7 @@ test('generated rare rooms never introduce the same tagged scene detail twice', 
     if (room.rarity === 'standard') continue;
     counts[room.rarity]++;
     assert.equal(typeof room.marvel, 'string');
-    const tags = [...Object.values(room.ambience), room.marvel].flatMap(text => byText.get(text).tags || []);
+    const tags = [...Object.values(room.ambience), room.marvel].flatMap(text => byText.get(text)?.tags || []);
     assert.equal(new Set(tags).size, tags.length, room.id);
   }
   assert.ok(counts.glorious > 0 && counts.sinister > 0);

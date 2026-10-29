@@ -8,3 +8,5 @@
 - Pick a room's character from its own `character:<id>` seed; editing the cast must never change doors, loot or other room content.
 - Keep the narrator's standing instructions in `js/prompts.js`: a shared foundation (labyrinth rules plus permitted invention) and a separate narrator voice; character sessions get the foundation plus their own first-person card prompt, so the two voices never contradict.
 - Bound character conversations with the turn limits in `js/encounters.js` rather than saved conversation memory; each scene stays short enough for the on-device model's context and nudges the wanderer onward.
+
+- Keep compact, non-interactive detail and air wording in `js/atmosphere.js`, with separate `detail:<id>` and `air:<id>` seeds; expanding these lists must not change existing room facts, doors, loot or rarity. Include them in asleep descriptions and awake facts without increasing the narrator sentence budget.
