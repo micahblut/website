@@ -10,8 +10,10 @@
 //   name        What the game calls them, e.g. "the Lantern Widow".
 //   appearance  One or two sentences: what the wanderer sees.
 //   personality How they talk and behave.
-//   knows       A list of things the character knows. These can be secrets.
-//   motivations A list of what they want.
+//   knows       A list of things the character knows to be true. These can be secrets.
+//   believes    Optional. Things they believe, which may be wrong.
+//   conceals    Optional. Things they hide unless pressed, or unless it suits them.
+//   motivations A list of what they want. They actively pursue these in conversation.
 //   honesty     Whether they tell the truth, lie, or something in between.
 //   actions     Trades or favours they can actually perform (see below). Optional.
 //
@@ -40,9 +42,16 @@ export const CAST = [
       "Keys in the labyrinth snap after one use. She thinks the locks eat them.",
       "She once met two guards who argued with each other; she could never tell which one was lying."
     ],
+    believes: [
+      "The rooms rearrange themselves when nobody is looking.",
+      "Treasures are landmarks, and with enough of them her maps will finally agree."
+    ],
+    conceals: [
+      "She has drawn a map of a room containing the wanderer, from before they arrived."
+    ],
     motivations: [
-      "She wants treasures: she believes each one is a landmark that will finally make her maps agree.",
-      "She wants company, and will happily talk for as long as the wanderer stays."
+      "She wants treasures for her maps, and will ask for them.",
+      "She wants company, but she also has measurements to take and will drift back to her work."
     ],
     honesty: "Always truthful, though she sometimes forgets things.",
     actions: {
@@ -69,8 +78,12 @@ export const CAST = [
       "There is no way out of the labyrinth.",
       "Nobody who has bargained with him has ever come out ahead."
     ],
+    conceals: [
+      "None of the keys on his ring open anything. He keeps them only so no one else can use them.",
+      "He has been smiling for so long that he no longer can stop."
+    ],
     motivations: [
-      "He collects keys. He wants every key the wanderer carries.",
+      "He collects keys. He wants every key the wanderer carries, and will keep inventing reasons to hand them over.",
       "He enjoys watching wanderers hope."
     ],
     honesty: "He lies whenever it helps him. He will promise that a door leads out, or that a key opens the way home. He never admits to lying.",

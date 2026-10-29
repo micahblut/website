@@ -1,8 +1,7 @@
+import { FOUNDATION, NARRATOR_VOICE } from "./prompts.js";
 const LANG = { expectedInputs: [{ type: "text", languages: ["en"] }], expectedOutputs: [{ type: "text", languages: ["en"] }] };
-const SYSTEM = `You are the narrator of an endless, exitless labyrinth in a minimalist text adventure.
-Write in second person, present tense, eerie and literary but concise.
-Never invent doors, exits, items or characters beyond the facts you are given.
-Never suggest there is a way out. Plain text only, no markdown, no lists, no headings.`;
+// The narrator's own voice; characters get FOUNDATION plus their own voice instead.
+const SYSTEM = `${FOUNDATION}\n\n${NARRATOR_VOICE}`;
 function api() {
   return typeof globalThis !== "undefined" ? globalThis.LanguageModel : undefined;
 }
@@ -60,12 +59,13 @@ export async function narrate(prompt, onText, signal) {
   }
 }
 // A conversation with one character. The session remembers everything said
-// so far; call end() when the wanderer leaves.
+// so far; call end() when the wanderer leaves. Characters speak in their own
+// first-person voice, so the narrator's second-person voice is left out.
 export async function startConversation(characterInstructions) {
   await wakeNarrator();
   const session = await api().create({
     ...LANG,
-    initialPrompts: [{ role: "system", content: `${SYSTEM}\n\n${characterInstructions}` }]
+    initialPrompts: [{ role: "system", content: `${FOUNDATION}\n\n${characterInstructions}` }]
   });
   return {
     say: (prompt, onText, signal) => stream(session, prompt, onText, signal),

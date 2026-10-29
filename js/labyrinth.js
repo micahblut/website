@@ -3,8 +3,9 @@ import { generateRoom, describeRoom, roomFacts } from './world.js';
 import { GUARD_QUESTIONS, guardAnswer } from './guards.js';
 import { loadSatchel, saveSatchel, loadMemory, remember, cacheNarration, cachedNarration } from './storage.js';
 import { narratorStatus, wakeNarrator, narrate, startConversation } from './narrator.js';
+import { roomPrompt } from './prompts.js';
 import { characterById } from './characters.js';
-import { parseReply, visibleWhileStreaming, applyAction, characterPrompt, wandererTurn } from './encounters.js';
+import { parseReply, visibleWhileStreaming, applyAction, characterPrompt, wandererTurn, conversationStage } from './encounters.js';
 
 const main = document.getElementById('labyrinth');
 let current;
@@ -53,6 +54,10 @@ async function render() {
   // The character in this room (if any), and the conversation in progress.
   const met = room.feature.kind === 'encounter' ? characterById(room.feature.character) : null;
   let talk = null;
+  // How many things the wanderer has said to them; once they've said their
+  // last word, they won't talk again during this visit.
+  let said = 0;
+  let finished = false;
   signal.addEventListener('abort', () => talk?.end());
   const heading = element('h2', 'section-heading', '[ the labyrinth ]');
   const meta = element('p', 'lab-meta', `chamber ${id}`);
@@ -148,7 +153,7 @@ async function render() {
       const b = button(here, guard === side ? `[ ${side} guard ]` : `address the ${side} guard`, () => { guard = side; update(); });
       b.setAttribute('aria-pressed', String(guard === side));
     }
-    if (met && status === 'available') {
+    if (met && status === 'available' && !finished) {
       if (talk) button(here, `stop talking to ${met.name}`, endTalk);
       else button(here, `speak with ${met.name}`, beginTalk);
     }
@@ -204,8 +209,9 @@ async function render() {
     const entry = append('speech', '');
     busy = true; entry.classList.add('lab-cursor'); update();
     let reply = '';
+    said += 1;
     try {
-      reply = await talk.say(wandererTurn(words, satchel), value => { if (!signal.aborted) entry.textContent = visibleWhileStreaming(value); }, signal);
+      reply = await talk.say(wandererTurn(words, satchel, said), value => { if (!signal.aborted) entry.textContent = visibleWhileStreaming(value); }, signal);
     } catch { reply = ''; }
     if (signal.aborted) return;
     const { speech, action } = parseReply(reply);
@@ -219,6 +225,10 @@ async function render() {
         satchel = result.satchel; remember('traded', `${id}:${action}`); save();
         append('system', result.message);
       }
+    }
+    if (conversationStage(said) === 'last') {
+      talk.end(); talk = null; finished = true;
+      append('system', `${met.name} has nothing more to say to you. The doors wait.`);
     }
     busy = false; update();
   }
@@ -240,7 +250,7 @@ async function render() {
   const cached = met ? null : cachedNarration(id);
   if (cached) append('narration', cached);
   else {
-    const text = await tell('narration', `Describe this chamber in 3–4 sentences, ending with the doors.\n${roomFacts(room)}`, describeRoom(room));
+    const text = await tell('narration', roomPrompt(roomFacts(room), room.rarity), describeRoom(room));
     if (status === 'available' && !signal.aborted && !met) cacheNarration(id, text);
   }
 }
