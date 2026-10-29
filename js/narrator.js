@@ -35,24 +35,40 @@ export function wakeNarrator(onProgress) {
   }
   return base;
 }
+async function stream(session, prompt, onText, signal) {
+  let text = "";
+  const reader = session.promptStreaming(prompt).getReader();
+  while (true) {
+    if (signal?.aborted) {
+      await reader.cancel();
+      break;
+    }
+    const { done, value } = await reader.read();
+    if (done)
+      break;
+    text = value.startsWith(text) && text.length > 0 ? value : text + value;
+    onText(text);
+  }
+  return text.trim();
+}
 export async function narrate(prompt, onText, signal) {
   const session = await (await wakeNarrator()).clone();
-  let text = "";
   try {
-    const reader = session.promptStreaming(prompt).getReader();
-    while (true) {
-      if (signal?.aborted) {
-        await reader.cancel();
-        break;
-      }
-      const { done, value } = await reader.read();
-      if (done)
-        break;
-      text = value.startsWith(text) && text.length > 0 ? value : text + value;
-      onText(text);
-    }
+    return await stream(session, prompt, onText, signal);
   } finally {
     session.destroy();
   }
-  return text.trim();
+}
+// A conversation with one character. The session remembers everything said
+// so far; call end() when the wanderer leaves.
+export async function startConversation(characterInstructions) {
+  await wakeNarrator();
+  const session = await api().create({
+    ...LANG,
+    initialPrompts: [{ role: "system", content: `${SYSTEM}\n\n${characterInstructions}` }]
+  });
+  return {
+    say: (prompt, onText, signal) => stream(session, prompt, onText, signal),
+    end: () => session.destroy()
+  };
 }

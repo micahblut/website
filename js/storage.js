@@ -17,7 +17,9 @@ function write(key, value) {
 }
 export const loadSatchel = () => read(SATCHEL, { keys: 0, treasures: [], steps: 0 });
 export const saveSatchel = (s) => write(SATCHEL, s);
-export const loadMemory = () => read(MEMORY, { opened: [], taken: [], unlocked: [] });
+// "traded" records character trades already made ("roomId:actionId") so a
+// once-only trade can't be repeated by revisiting the room.
+export const loadMemory = () => read(MEMORY, { opened: [], taken: [], unlocked: [], traded: [] });
 export function remember(kind, value) {
   const m = loadMemory();
   if (!m[kind].includes(value))

@@ -1,11 +1,16 @@
 import { pick, rngFor, uuidFrom } from "./rng.js";
 import { WALLS, LIGHT, SOUND, SMELL, TREASURES, INSCRIPTIONS, RARE, compatibleEntries } from "./language.js";
+import { CAST } from "./characters.js";
 // Preserve existing imports used by the game and tests.
 export { TREASURES, RARE, describeRoom, roomFacts } from "./language.js";
 export const DIRECTIONS = ["north", "east", "south", "west"];
 // Rare rooms: RARE_CHANCE of all rooms are rare; of those, GLORIOUS_SHARE are glorious and the rest sinister.
 export const RARE_CHANCE = 0.08;
 export const GLORIOUS_SHARE = 0.5;
+// Encounters: ENCOUNTER_CHANCE of all rooms hold someone to meet. With the
+// narrator asleep, that is the pair of guards (one honest, one liar); with it
+// awake, one character from the cast in characters.js.
+export const ENCOUNTER_CHANCE = 0.2;
 function pickRarity(id) {
   const rng = rngFor(`rarity:${id}`);
   if (rng() >= RARE_CHANCE)
@@ -24,7 +29,15 @@ function pickRarity(id) {
   }
   return { kind, marvel: marvel.text, ambience };
 }
-function pickFeature(rng, exits) {
+function pickEncounter(id, rng, exits) {
+  const liar = rng() < 0.5 ? "left" : "right";
+  rng(); // Unused draw, kept so the rest of every room stays as it was.
+  const falseDoor = pick(rng, exits).dir;
+  // The character uses its own seed, so adding characters never changes doors or loot.
+  const character = pick(rngFor(`character:${id}`), CAST).id;
+  return { kind: "encounter", liar, falseDoor, character };
+}
+function pickFeature(id, rng, exits) {
   const r = rng();
   if (r < 0.25)
     return { kind: "empty" };
@@ -35,8 +48,8 @@ function pickFeature(rng, exits) {
   }
   if (r < 0.65)
     return { kind: "key" };
-  if (r < 0.85)
-    return { kind: "guards", lies: { left: rng() < 0.5, right: rng() < 0.5 }, falseDoor: pick(rng, exits).dir };
+  if (r < 0.65 + ENCOUNTER_CHANCE)
+    return pickEncounter(id, rng, exits);
   return { kind: "inscription", text: pick(rng, INSCRIPTIONS) };
 }
 export function generateRoom(id) {
@@ -47,7 +60,7 @@ export function generateRoom(id) {
   const exits = dirs.map((dir) => ({ dir, locked: rng() < 0.22, to: neighbourId(id, dir) }));
   if (exits.every((e) => e.locked) && exits[0])
     exits[0].locked = false;
-  const feature = pickFeature(rng, exits);
+  const feature = pickFeature(id, rng, exits);
   const ambience = { walls: pick(rng, WALLS).text, light: pick(rng, LIGHT).text, sound: pick(rng, SOUND).text, smell: pick(rng, SMELL).text };
   const rare = pickRarity(id);
   return {
