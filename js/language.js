@@ -1,45 +1,46 @@
 // English room wording lives here; room selection and probabilities live in world.js.
-// Add text to the matching list, one entry per line. Keep each entry in quotes.
-// Ambience entries are phrases; marvels are complete sentences.
-// This file preserves the existing phrasing, including its current grammar conventions.
+// Each ambience entry has text and a grammatical form used by the templates below.
+// Marvels use the sentence form. Optional tags identify scene details that should
+// not be introduced twice. Use the same tag for the same scene detail in any list.
+// Add entries one per line; use a complete sentence when no phrase template fits.
 // Reordering or adding list entries can change the descriptions of bookmarked rooms.
 
 export const WALLS = [
-  "damp limestone",
-  "black basalt",
-  "crumbling red brick",
-  "smooth bone-white marble",
-  "moss-furred granite",
-  "tarnished copper panels",
-  "packed earth threaded with roots",
-  "glazed green tiles",
+  { text: "damp limestone", form: "material" },
+  { text: "black basalt", form: "material" },
+  { text: "crumbling red brick", form: "material" },
+  { text: "smooth bone-white marble", form: "material" },
+  { text: "moss-furred granite", form: "material" },
+  { text: "tarnished copper panels", form: "material" },
+  { text: "packed earth threaded with roots", form: "material" },
+  { text: "glazed green tiles", form: "material" },
 ];
 export const LIGHT = [
-  "a guttering torch",
-  "phosphorescent fungus",
-  "a single candle that never shortens",
-  "pale light with no source",
-  "a crack of grey daylight high above",
-  "an iron brazier of blue coals",
-  "near-total darkness",
+  { text: "a guttering torch", form: "source" },
+  { text: "phosphorescent fungus", form: "source" },
+  { text: "a single candle that never shortens", form: "source" },
+  { text: "pale light with no source", form: "source" },
+  { text: "a crack of grey daylight high above", form: "source" },
+  { text: "an iron brazier of blue coals", form: "source" },
+  { text: "near-total darkness", form: "darkness" },
 ];
 export const SOUND = [
-  "distant dripping",
-  "a faint hum, like a held note",
-  "footsteps that stop when you do",
-  "wind through unseen gaps",
-  "silence so thick it rings",
-  "the slow creak of settling stone",
-  "a far-off bell",
+  { text: "distant dripping", form: "sound" },
+  { text: "a faint hum, like a held note", form: "sound" },
+  { text: "footsteps that stop when you do", form: "sound" },
+  { text: "wind through unseen gaps", form: "sound" },
+  { text: "silence so thick it rings", form: "silence" },
+  { text: "the slow creak of settling stone", form: "sound" },
+  { text: "a far-off bell", form: "sound" },
 ];
 export const SMELL = [
-  "wet stone",
-  "old parchment",
-  "candle smoke",
-  "rust",
-  "cold iron and salt",
-  "crushed mint",
-  "nothing at all",
+  { text: "wet stone", form: "smell" },
+  { text: "old parchment", form: "smell" },
+  { text: "candle smoke", form: "smell" },
+  { text: "rust", form: "smell" },
+  { text: "cold iron and salt", form: "smell" },
+  { text: "crushed mint", form: "smell" },
+  { text: "nothing at all", form: "odorless" },
 ];
 export const TREASURES = [
   "a gilded compass whose needle spins endlessly",
@@ -65,101 +66,141 @@ export const INSCRIPTIONS = [
 export const RARE = {
   glorious: {
     walls: [
-      "walls crusted with violet amethyst crystals",
-      "pale pink salt, carved into the vaulted ribs of a cathedral",
-      "veins of raw gold running through white quartz",
-      "mother-of-pearl that shifts colour as you move",
-      "polished jade inlaid with silver script",
-      "frozen waterfalls of clear crystal",
+      { text: "The walls are crusted with violet amethyst crystals.", form: "sentence" },
+      { text: "pale pink salt, carved into the vaulted ribs of a cathedral", form: "material", tags: ["salt-vault"] },
+      { text: "veins of raw gold running through white quartz", form: "detail" },
+      { text: "mother-of-pearl that shifts colour as you move", form: "material" },
+      { text: "polished jade inlaid with silver script", form: "material" },
+      { text: "frozen waterfalls of clear crystal", form: "material" },
     ],
     light: [
-      "shafts of light refracting through a thousand crystals",
-      "a still emerald pool glowing from beneath",
-      "rose-gold light pouring through salt windows",
-      "drifting motes that shine like fireflies",
-      "a chandelier of living ice",
+      { text: "shafts of light refracting through a thousand crystals", form: "glow" },
+      { text: "a still emerald pool glowing from beneath", form: "source", tags: ["emerald-pool"] },
+      { text: "rose-gold light pouring through salt windows", form: "glow" },
+      { text: "drifting motes that shine like fireflies", form: "source" },
+      { text: "a chandelier of living ice", form: "source" },
     ],
     sound: [
-      "a choir of humming crystals",
-      "water chiming softly over stone",
-      "a single sustained note, warm and endless",
-      "the gentle ring of glass touching glass",
+      { text: "a choir of humming crystals", form: "sound" },
+      { text: "water chiming softly over stone", form: "sound" },
+      { text: "a single sustained note, warm and endless", form: "sound" },
+      { text: "the gentle ring of glass touching glass", form: "sound" },
     ],
     smell: [
-      "clean mountain air",
-      "salt and sweet resin",
-      "rain on warm stone",
-      "blossoms that cannot grow here",
+      { text: "clean mountain air", form: "smell" },
+      { text: "salt and sweet resin", form: "smell" },
+      { text: "rain on warm stone", form: "smell" },
+      { text: "blossoms that cannot grow here", form: "smell" },
     ],
     marvels: [
-      "A glittering emerald pool fills the centre, so clear you can see coins at the bottom.",
-      "The ceiling rises into a cathedral vault, every arch carved from salt.",
-      "Crystals as tall as a person grow from the floor, catching the light.",
-      "A garden of stone flowers blooms in the cracks, each petal a gemstone.",
-      "A great window of rose quartz looks out onto a sky that should not exist.",
+      { text: "A glittering emerald pool fills the centre, so clear you can see coins at the bottom.", form: "sentence", tags: ["emerald-pool"] },
+      { text: "The ceiling rises into a cathedral vault, every arch carved from salt.", form: "sentence", tags: ["salt-vault"] },
+      { text: "Crystals as tall as a person grow from the floor, catching the light.", form: "sentence" },
+      { text: "A garden of stone flowers blooms in the cracks, each petal a gemstone.", form: "sentence" },
+      { text: "A great window of rose quartz looks out onto a sky that should not exist.", form: "sentence" },
     ]
   },
   sinister: {
     walls: [
-      "rusted iron plates slick with something dark",
-      "stone stained in long rust-red streaks",
-      "black rock scratched with countless tally marks",
-      "walls hung with heavy, swaying chains",
-      "bricks mortared with what looks like old bone",
+      { text: "rusted iron plates slick with something dark", form: "material" },
+      { text: "stone stained in long rust-red streaks", form: "material" },
+      { text: "black rock scratched with countless tally marks", form: "material" },
+      { text: "The walls are hung with heavy, swaying chains.", form: "sentence", tags: ["chains"] },
+      { text: "bricks mortared with what looks like old bone", form: "material" },
     ],
     light: [
-      "a lantern that flickers whenever you look away",
-      "a dim red glow seeping from the cracks",
-      "a single candle burning with a black flame",
-      "almost no light at all, and it is shrinking",
+      { text: "a lantern that flickers whenever you look away", form: "source" },
+      { text: "a dim red glow seeping from the cracks", form: "glow" },
+      { text: "a single candle burning with a black flame", form: "source" },
+      { text: "There is almost no light at all, and it is shrinking.", form: "sentence" },
     ],
     sound: [
-      "whispering just too quiet to make out",
-      "the slow clink of chains moving by themselves",
-      "steady dripping, thicker than water",
-      "your name, spoken once, from behind you",
-      "breathing that is not your own",
+      { text: "whispering just too quiet to make out", form: "sound", tags: ["whispers"] },
+      { text: "the slow clink of chains moving by themselves", form: "sound", tags: ["chains"] },
+      { text: "steady dripping, thicker than water", form: "sound", tags: ["dripping"] },
+      { text: "Your name is spoken once, from behind you.", form: "sentence" },
+      { text: "breathing that is not your own", form: "sound" },
     ],
     smell: [
-      "blood and wet iron",
-      "rot beneath the stone",
-      "smoke and burnt hair",
-      "a sickly sweetness",
+      { text: "blood and wet iron", form: "smell" },
+      { text: "rot beneath the stone", form: "smell" },
+      { text: "smoke and burnt hair", form: "smell" },
+      { text: "a sickly sweetness", form: "smell" },
     ],
     marvels: [
-      "Chains hang from the ceiling, and some of them are still swaying.",
-      "Something drips steadily from above, pooling red on the floor.",
-      "Dark whispers circle the room, always just behind your ear.",
-      "Manacles are bolted to the wall at the height of a kneeling person.",
-      "Handprints smear the walls, all of them reaching for the doors.",
+      { text: "Chains hang from the ceiling, and some of them are still swaying.", form: "sentence", tags: ["chains"] },
+      { text: "Something drips steadily from above, pooling red on the floor.", form: "sentence", tags: ["dripping"] },
+      { text: "Dark whispers circle the room, always just behind your ear.", form: "sentence", tags: ["whispers"] },
+      { text: "Manacles are bolted to the wall at the height of a kneeling person.", form: "sentence" },
+      { text: "Handprints smear the walls, all of them reaching for the doors.", form: "sentence" },
     ]
   }
 };
 
+// Templates are English-only. Unknown forms fail loudly rather than silently
+// producing an ungrammatical sentence when new wording is added.
+const capitalize = (text) => text[0].toUpperCase() + text.slice(1);
+export const SENTENCE_PATTERNS = {
+  material: (text) => `The walls are made of ${text}.`,
+  detail: (text) => `The walls are threaded with ${text}.`,
+  source: (text) => `The chamber is lit by ${text}.`,
+  glow: (text) => `${capitalize(text)} fills the chamber.`,
+  darkness: (text) => `${capitalize(text)} fills the chamber.`,
+  sound: (text) => `You hear ${text}.`,
+  silence: (text) => `There is ${text}.`,
+  smell: (text) => `You smell ${text}.`,
+  odorless: () => "The air has no scent.",
+  sentence: (text) => text,
+};
+const vocabulary = [
+  ...WALLS, ...LIGHT, ...SOUND, ...SMELL,
+  ...Object.values(RARE).flatMap((set) => Object.values(set).flat()),
+];
+const entriesByText = new Map(vocabulary.map((entry) => [entry.text, entry]));
+export function sentenceFor(entry) {
+  const pattern = SENTENCE_PATTERNS[entry.form];
+  if (!pattern) throw new Error(`Unknown room phrase form: ${entry.form}`);
+  return pattern(entry.text);
+}
+// Pure filtering keeps compatibility separate from random selection. world.js
+// still owns the seed and consumes one random draw per selected detail.
+export function compatibleEntries(entries, selected) {
+  const used = new Set(selected.flatMap((entry) => entry.tags || []));
+  return entries.filter((entry) => !(entry.tags || []).some((tag) => used.has(tag)));
+}
+function ambienceSentence(text, fallbackForm) {
+  // String room records (including older records) remain supported.
+  return sentenceFor(entriesByText.get(text) || { text, form: fallbackForm });
+}
 export function describeRoom(room) {
   const a = room.ambience;
   const exits = room.exits.map((e) => e.locked ? `${e.dir} (locked)` : e.dir).join(", ");
   const feature = {
-    empty: "The chamber is bare.",
+    empty: room.marvel ? "" : "There is nothing here to take or disturb.",
     chest: room.feature.kind === "chest" && room.feature.locked ? "A heavy chest sits against the wall, bound with a padlock." : "A wooden chest sits against the wall, its lid unlatched.",
     key: "Something glints on the floor: a small iron key.",
     guards: "Two guards stand motionless by the doors, watching you.",
     inscription: room.feature.kind === "inscription" ? `Words are carved into the wall: “${room.feature.text}”` : ""
   }[room.feature.kind];
-  return `${/^walls /.test(a.walls) ? a.walls[0].toUpperCase() + a.walls.slice(1) : `Walls of ${a.walls}`}, lit by ${a.light}. You hear ${a.sound} and smell ${a.smell}.${room.marvel ? ` ${room.marvel}` : ""} ${feature}
-Doors lead: ${exits}.`;
+  return [
+    ambienceSentence(a.walls, "material"),
+    ambienceSentence(a.light, "source"),
+    ambienceSentence(a.sound, "sound"),
+    ambienceSentence(a.smell, "smell"),
+    room.marvel,
+    feature,
+  ].filter(Boolean).join(" ") + `\nDoors lead: ${exits}.`;
 }
 export function roomFacts(room) {
   const f = room.feature;
-  const feature = f.kind === "chest" ? `a ${f.locked ? "padlocked" : "closed but unlocked"} chest (do not reveal contents)` : f.kind === "key" ? "a small iron key lying on the floor" : f.kind === "guards" ? "two silent guards, one on the left and one on the right (never say or hint whether either of them lies)" : f.kind === "inscription" ? `an inscription on the wall reading exactly: "${f.text}"` : "nothing of note";
+  const feature = f.kind === "chest" ? `a ${f.locked ? "padlocked" : "closed but unlocked"} chest (do not reveal contents)` : f.kind === "key" ? "a small iron key lying on the floor" : f.kind === "guards" ? "two silent guards, one on the left and one on the right (never say or hint whether either of them lies)" : f.kind === "inscription" ? `an inscription on the wall reading exactly: "${f.text}"` : "no interactive feature; retain all the surroundings and any marvel described above";
   return [
-    `Walls: ${room.ambience.walls}`,
-    `Light: ${room.ambience.light}`,
-    `Sound: ${room.ambience.sound}`,
-    `Smell: ${room.ambience.smell}`,
+    `Walls: ${ambienceSentence(room.ambience.walls, "material")}`,
+    `Light: ${ambienceSentence(room.ambience.light, "source")}`,
+    `Sound: ${ambienceSentence(room.ambience.sound, "sound")}`,
+    `Smell: ${ambienceSentence(room.ambience.smell, "smell")}`,
     ...room.rarity === "glorious" ? ["Atmosphere: a rare, glorious chamber — awe-inspiring and beautiful", `Marvel: ${room.marvel}`] : room.rarity === "sinister" ? ["Atmosphere: a rare, sinister chamber — unsettling horror and dread", `Marvel: ${room.marvel}`] : [],
     `Feature: ${feature}`,
     `Doors (exactly these, no others): ${room.exits.map((e) => `${e.dir}${e.locked ? " (locked)" : ""}`).join(", ")}`
-  ].join(`
-`);
+  ].join("\n");
 }

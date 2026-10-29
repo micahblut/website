@@ -1,5 +1,5 @@
 import { pick, rngFor, uuidFrom } from "./rng.js";
-import { WALLS, LIGHT, SOUND, SMELL, TREASURES, INSCRIPTIONS, RARE } from "./language.js";
+import { WALLS, LIGHT, SOUND, SMELL, TREASURES, INSCRIPTIONS, RARE, compatibleEntries } from "./language.js";
 // Preserve existing imports used by the game and tests.
 export { TREASURES, RARE, describeRoom, roomFacts } from "./language.js";
 export const DIRECTIONS = ["north", "east", "south", "west"];
@@ -12,7 +12,17 @@ function pickRarity(id) {
     return null;
   const kind = rng() < GLORIOUS_SHARE ? "glorious" : "sinister";
   const set = RARE[kind];
-  return { kind, marvel: pick(rng, set.marvels), ambience: { walls: pick(rng, set.walls), light: pick(rng, set.light), sound: pick(rng, set.sound), smell: pick(rng, set.smell) } };
+  const marvel = pick(rng, set.marvels);
+  const selected = [marvel];
+  const ambience = {};
+  for (const field of ["walls", "light", "sound", "smell"]) {
+    const candidates = compatibleEntries(set[field], selected);
+    if (!candidates.length) throw new Error(`No compatible ${field} for ${kind} room`);
+    const entry = pick(rng, candidates);
+    selected.push(entry);
+    ambience[field] = entry.text;
+  }
+  return { kind, marvel: marvel.text, ambience };
 }
 function pickFeature(rng, exits) {
   const r = rng();
@@ -38,7 +48,7 @@ export function generateRoom(id) {
   if (exits.every((e) => e.locked) && exits[0])
     exits[0].locked = false;
   const feature = pickFeature(rng, exits);
-  const ambience = { walls: pick(rng, WALLS), light: pick(rng, LIGHT), sound: pick(rng, SOUND), smell: pick(rng, SMELL) };
+  const ambience = { walls: pick(rng, WALLS).text, light: pick(rng, LIGHT).text, sound: pick(rng, SOUND).text, smell: pick(rng, SMELL).text };
   const rare = pickRarity(id);
   return {
     id,
