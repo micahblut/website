@@ -84,7 +84,8 @@ async function render() {
 
   async function tell(kind, prompt, fallback) {
     if (signal.aborted) return fallback;
-    const entry = append(kind, fallback);
+    // Awake narration starts with only the cursor; fallback is for silence or failure.
+    const entry = append(kind, status === 'available' ? '' : fallback);
     if (status !== 'available') return fallback;
     busy = true; entry.classList.add('lab-cursor'); update();
     let text = fallback;
